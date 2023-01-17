@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "YouTube Volume Normalizer",
-  "version": "1.0",
+  "version": "1.01",
 
   "description": "Normalize YouTube volume. This extension will increase the volume if it is too soft. YouTube by default will lower the volume if it is too loud.",
 

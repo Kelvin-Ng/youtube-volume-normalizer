@@ -48,8 +48,10 @@ function updateVolume(gainNode, infoPanel) {
     if (dB >= 0) {
         // Reset to no gain because YouTube already normalize the volume when it is too loud
         gainNode.gain.value = 1.0;
+        infoPanel.setUseDefault();
     } else {
         gainNode.gain.value = Math.pow(10, -dB/20);
+        infoPanel.unsetUseDefault();
         infoPanel.update(gainNode.gain.value);
         console.log('Youtube Volume Normalizer: Gain: ' + -dB + 'dB' + ' (' + gainNode.gain.value * 100 + '%)');
     }
@@ -58,6 +60,8 @@ function updateVolume(gainNode, infoPanel) {
 class InfoPanel {
     constructor() {
         this.myGain = 1;
+
+        this.useDefault = true;
 
         this.observer = new MutationObserver(mutations => {
             this.update();
@@ -103,9 +107,21 @@ class InfoPanel {
         return dB;
     }
 
+    setUseDefault() {
+        this.useDefault = true;
+    }
+
+    unsetUseDefault() {
+        this.useDefault = false;
+    }
+
     update(val) {
         if (this.numToSkip > 0) {
             this.numToSkip -= 1;
+            return;
+        }
+
+        if (this.useDefault) {
             return;
         }
 
