@@ -98,7 +98,7 @@ class InfoPanel {
     }
 
     getDb() {
-        var contentLoudnessStr = this.contentLoudnessEle.innerHTML.split(' ');
+        var contentLoudnessStr = this.contentLoudnessEle.innerText.split(' ');
         if (contentLoudnessStr.length < 7) {
             return 0;
         }
@@ -129,14 +129,14 @@ class InfoPanel {
             this.myGain = val;
         }
 
-        var contentLoudnessStr = this.contentLoudnessEle.innerHTML.split(' ');
+        var contentLoudnessStr = this.contentLoudnessEle.innerText.split(' ');
         if (contentLoudnessStr.length < 4) {
             return;
         }
 
         var basicGain = parseFloat(contentLoudnessStr[1].slice(0, -1)) / 100;
         var percentage = Math.round(this.myGain * basicGain * 100);
-        this.contentLoudnessEle.innerHTML = this.contentLoudnessEle.innerHTML.replace(/ \/ \d+\%/i, ' / ' + percentage + '%'); // The regex means ' / X%'
+        this.contentLoudnessEle.innerText = this.contentLoudnessEle.innerText.replace(/ \/ \d+\%/i, ' / ' + percentage + '%'); // The regex means ' / X%'
 
         this.numToSkip += 1;
     }
