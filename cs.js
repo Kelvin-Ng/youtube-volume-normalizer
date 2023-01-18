@@ -196,6 +196,7 @@ class AudioGraph {
     }
 
     connect() {
+        this.videoEleSource.disconnect();
         this.videoEleSource.connect(this.limiterNode);
         this.gainNode.connect(this.audioCtx.destination);
     }
