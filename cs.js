@@ -166,12 +166,6 @@ class InfoPanel {
     var infoPanel = new InfoPanel();
     await infoPanel.init();
 
-    var videoElements = document.querySelectorAll("video");
-    var audioElements = document.querySelectorAll("audio");
-    if (videoElements.length == 0 && audioElements.length == 0) {
-    	return;
-    }
-
     var audioCtx = new AudioContext();
 
     var limiterNode = audioCtx.createDynamicsCompressor();
@@ -185,13 +179,9 @@ class InfoPanel {
     gainNode.channelInterpretation = 'speakers';
     gainNode.gain.value = 1.0;
 
-    function connectOutput(element) {
-        audioCtx.createMediaElementSource(element).connect(limiterNode);
-        limiterNode.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-    }
-    videoElements.forEach(connectOutput);
-    audioElements.forEach(connectOutput);
+    audioCtx.createMediaElementSource(videoEle).connect(limiterNode);
+    limiterNode.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
 
     updateVolume(gainNode, limiterNode, infoPanel);
 
