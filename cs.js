@@ -164,7 +164,7 @@ class AudioGraph {
         this.limiterNode = this.audioCtx.createDynamicsCompressor();
         this.limiterNode.threshold.value = 0;
         this.limiterNode.knee.value = 0;
-        this.limiterNode.ratio.value = 40.0;
+        this.limiterNode.ratio.value = 20.0;
         this.limiterNode.attack.value = 0.001;
         this.limiterNode.release.value = 0.1;
 
