@@ -66,8 +66,9 @@ function updateVolume(gainNode, limiterNode, infoPanel) {
         // So, the makeup gain is -0.6 * `dB`dB. So, we only need to apply a gain of -0.4 * `dB`dB so that the total gain is -`dB`dB.
         gainNode.gain.value = Math.pow(10, -dB * 0.4 / 20);
         infoPanel.unsetUseDefault();
-        infoPanel.update(gainNode.gain.value);
-        console.log('Youtube Volume Normalizer: Gain: ' + -dB + 'dB' + ' (' + gainNode.gain.value * 100 + '%)');
+        const actualGain = Math.pow(10, -dB / 20);
+        infoPanel.update(actualGain);
+        console.log('Youtube Volume Normalizer: Gain: ' + -dB + 'dB' + ' (' + actualGain * 100 + '%)');
     }
 }
 
