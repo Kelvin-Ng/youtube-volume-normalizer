@@ -38,7 +38,7 @@ function waitForXpath(path, contextNode) {
     });
 }
 
-function updateVolume(gainNode, infoPanel) {
+function updateVolume(gainNode, limiterNode, infoPanel) {
     console.log('Youtube Volume Normalizer: Update volume');
     infoPanel.refresh();
     dB = infoPanel.getDb();
@@ -50,7 +50,21 @@ function updateVolume(gainNode, infoPanel) {
         gainNode.gain.value = 1.0;
         infoPanel.setUseDefault();
     } else {
-        gainNode.gain.value = Math.pow(10, -dB/20);
+        // `dB` is the gain relative to YouTube preferred level (let's call the YouTube preferred level as 0dBYT)
+        // We want to apply a gain of -`dB`dB so that the final volume is 0dBYT.
+
+        // To avoid clipping, the maximum volume after amplification have to be below 0 LUFS.
+        // That means, before amplification, we want to compress so that the maximum volume is below `dB` LUFS.
+        // Considering the compresion curve, we want threshold - (1/ratio)*threshold < `dB`. Solving this equation yields the below formula:
+        const ratio = limiterNode.ratio.value;
+        limiterNode.threshold.value = ratio / (ratio - 1.0) * dB;
+
+        // Then we do the actual amplification. However, the DynamicsCompressorNode will apply a makeup gain.
+        // The makeup gain it applies is 0.6 * -(maximum gain according to compression curve).
+        // (Ref.: https://webaudio.github.io/web-audio-api/#computing-the-makeup-gain)
+        // We have set the threshold so that the maximum gain is `dB`dB.
+        // So, the makeup gain is -0.6 * `dB`dB. So, we only need to apply a gain of -0.4 * `dB`dB so that the total gain is -`dB`dB.
+        gainNode.gain.value = Math.pow(10, -dB * 0.4 / 20);
         infoPanel.unsetUseDefault();
         infoPanel.update(gainNode.gain.value);
         console.log('Youtube Volume Normalizer: Gain: ' + -dB + 'dB' + ' (' + gainNode.gain.value * 100 + '%)');
@@ -155,22 +169,32 @@ class InfoPanel {
     if (videoElements.length == 0 && audioElements.length == 0) {
     	return;
     }
+
     var audioCtx = new AudioContext();
+
+    var limiterNode = audioCtx.createDynamicsCompressor();
+    limiterNode.threshold.value = 0;
+    limiterNode.knee.value = 0;
+    limiterNode.ratio.value = 40.0;
+    limiterNode.attack.value = 0.001;
+    limiterNode.release.value = 0.1;
+
     var gainNode = audioCtx.createGain();
     gainNode.channelInterpretation = 'speakers';
     gainNode.gain.value = 1.0;
 
     function connectOutput(element) {
-        audioCtx.createMediaElementSource(element).connect(gainNode);
+        audioCtx.createMediaElementSource(element).connect(limiterNode);
+        limiterNode.connect(gainNode);
         gainNode.connect(audioCtx.destination);
     }
     videoElements.forEach(connectOutput);
     audioElements.forEach(connectOutput);
 
-    updateVolume(gainNode, infoPanel);
+    updateVolume(gainNode, limiterNode, infoPanel);
 
     const observer = new MutationObserver(mutations => {
-        updateVolume(gainNode, infoPanel);
+        updateVolume(gainNode, limiterNode, infoPanel);
     });
 
     observer.observe(videoEle, {
