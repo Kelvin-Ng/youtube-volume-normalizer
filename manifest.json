@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "YouTube Volume Normalizer",
-  "version": "2.1",
+  "version": "2.2",
   "homepage_url": "https://github.com/Kelvin-Ng/youtube-volume-normalizer",
   "description": "Normalize YouTube volume. This extension will increase the volume if it is too soft. YouTube by default will only lower the volume if it is too loud.",
 
