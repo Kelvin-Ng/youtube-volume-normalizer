@@ -48,6 +48,7 @@ function updateVolume(gainNode, limiterNode, infoPanel) {
     if (dB >= 0) {
         // Reset to no gain because YouTube already normalize the volume when it is too loud
         gainNode.gain.value = 1.0;
+        limiterNode.threshold.value = 0;
         infoPanel.setUseDefault();
     } else {
         // `dB` is the gain relative to YouTube preferred level (let's call the YouTube preferred level as 0dBYT)
