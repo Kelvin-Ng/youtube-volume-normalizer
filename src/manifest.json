@@ -8,8 +8,20 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["{{./content/index.js}}"]
+      "js": ["content.js"]
     }
-  ]
+  ],
+
+  "browser_action": {
+      "default_popup": "popup/popup.html"
+  },
+
+  "permissions": ["storage"],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{f143a804-a8a5-4661-a74e-36f7abf1ed1c}"
+    }
+  }
 }
 
