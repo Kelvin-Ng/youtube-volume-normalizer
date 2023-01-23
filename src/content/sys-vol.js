@@ -18,7 +18,7 @@ function videoSrcUpdated(videoEle, infoPanel, audioPeakGraph) {
     //var stream = videoEle.captureStream();
 
     infoPanel.refresh();
-    if (!videoEle.paused) {
+    if (!videoEle.paused && !videoEle.muted) {
         var dB = infoPanel.getDb();
         if (dB > 0) {
             dB = 0;
@@ -27,16 +27,30 @@ function videoSrcUpdated(videoEle, infoPanel, audioPeakGraph) {
     }
 }
 
-function videoPlayed(evt, infoPanel) {
-    var dB = infoPanel.getDb();
-    if (dB > 0) {
-        dB = 0;
+function videoPlayed(evt, videoEle, infoPanel) {
+    if (!videoEle.muted) {
+        var dB = infoPanel.getDb();
+        if (dB > 0) {
+            dB = 0;
+        }
+        browser.runtime.sendMessage({type: 'set', dB: -dB});
     }
-    browser.runtime.sendMessage({type: 'set', dB: -dB});
 }
 
 function videoPaused(evt) {
     browser.runtime.sendMessage({type: 'unset'});
+}
+
+function videoVolumeChange(evt, videoEle, infoPanel) {
+    if (videoEle.muted) {
+        browser.runtime.sendMessage({type: 'unset'});
+    } else {
+        var dB = infoPanel.getDb();
+        if (dB > 0) {
+            dB = 0;
+        }
+        browser.runtime.sendMessage({type: 'set', dB: -dB});
+    }
 }
 
 function sysVol(videoEle, infoPanel) {
@@ -59,10 +73,13 @@ function sysVol(videoEle, infoPanel) {
     });
 
     videoEle.addEventListener('play', (evt) => {
-        videoPlayed(evt, infoPanel);
+        videoPlayed(evt, videoEle, infoPanel);
     });
     videoEle.addEventListener('pause', videoPaused);
     videoEle.addEventListener('ended', videoPaused);
+    videoEle.addEventListener('volumechange', (evt) => {
+        videoVolumeChange(evt, videoEle, infoPanel);
+    });
 }
 
 export { sysVol };
