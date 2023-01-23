@@ -1,0 +1,8 @@
+{
+  "name": "youtube.volume.normalizer",
+  "description": "Native app for YouTube Volume Normalizer to control system volume",
+  "path": "</path/to/executable>",
+  "type": "stdio",
+  "allowed_extensions": ["{0fa8f380-98c6-4cc9-9f24-10d84bf1b609}"]
+}
+

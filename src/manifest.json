@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "YouTube Volume Normalizer",
-  "version": "2.2",
+  "version": "3.0",
   "homepage_url": "https://github.com/Kelvin-Ng/youtube-volume-normalizer",
   "description": "Normalize YouTube volume. This extension will increase the volume if it is too soft. YouTube by default will only lower the volume if it is too loud.",
 
@@ -12,15 +12,20 @@
     }
   ],
 
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+
   "browser_action": {
       "default_popup": "popup/popup.html"
   },
 
-  "permissions": ["storage"],
+  "permissions": ["storage", "nativeMessaging"],
 
   "browser_specific_settings": {
     "gecko": {
-      "id": "{f143a804-a8a5-4661-a74e-36f7abf1ed1c}"
+      "id": "{0fa8f380-98c6-4cc9-9f24-10d84bf1b609}"
     }
   }
 }

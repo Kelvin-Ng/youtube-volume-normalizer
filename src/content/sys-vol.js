@@ -15,19 +15,38 @@ class AudioPeakGraph {
 
 function videoSrcUpdated(videoEle, infoPanel, audioPeakGraph) {
     console.log('YouTube Volume Normalizer: Video source updated');
-    var stream = videoEle.captureStream();
+    //var stream = videoEle.captureStream();
+
+    infoPanel.refresh();
+    if (!videoEle.paused) {
+        var dB = infoPanel.getDb();
+        if (dB > 0) {
+            dB = 0;
+        }
+        browser.runtime.sendMessage({type: 'set', dB: -dB});
+    }
+}
+
+function videoPlayed(evt, infoPanel) {
+    var dB = infoPanel.getDb();
+    if (dB > 0) {
+        dB = 0;
+    }
+    browser.runtime.sendMessage({type: 'set', dB: -dB});
+}
+
+function videoPaused(evt) {
+    browser.runtime.sendMessage({type: 'unset'});
 }
 
 function sysVol(videoEle, infoPanel) {
-    var audioPeakGraph = new AudioPeakGraph();
+    // All Web Audio API stuff will be useful later
+    //var audioPeakGraph = new AudioPeakGraph();
+    var audioPeakGraph = null;
 
-    if (!videoEle.captureStream) {
-        videoEle.captureStream = videoEle.mozCaptureStream;
-    }
-
-    addEventListener('durationchange', (event) => {
-        videoSrcUpdated(videoEle, infoPanel, audioPeakGraph);
-    });
+    //if (!videoEle.captureStream) {
+    //    videoEle.captureStream = videoEle.mozCaptureStream;
+    //}
 
     videoSrcUpdated(videoEle, infoPanel, audioPeakGraph);
 
@@ -38,6 +57,12 @@ function sysVol(videoEle, infoPanel) {
     observer.observe(videoEle, {
         attributeFilter: ['src',],
     });
+
+    videoEle.addEventListener('play', (evt) => {
+        videoPlayed(evt, infoPanel);
+    });
+    videoEle.addEventListener('pause', videoPaused);
+    videoEle.addEventListener('ended', videoPaused);
 }
 
 export { sysVol };
