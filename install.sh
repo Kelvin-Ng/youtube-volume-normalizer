@@ -12,7 +12,7 @@ fi
 
 # Common variables
 LINUX_NMH_DIR="NativeMessagingHosts"
-JSON_FILE="youtube.volume.normalizer.json"
+JSON_FILE="youtube.volume.normalizer-chromium.json"
 
 select_browser() {
     trap 'echo; exit 1' INT
@@ -39,6 +39,7 @@ select_browser() {
         linux_path="$HOME/.mozilla"
         mac_path="$HOME/Library/Application Support/Mozilla"
         LINUX_NMH_DIR="native-messaging-hosts"
+        JSON_FILE="youtube.volume.normalizer.json"
         ;;
     custom-chromium)
         if (($# == 2)); then
@@ -56,6 +57,7 @@ select_browser() {
             mac_path="$linux_path"
         fi
         LINUX_NMH_DIR="native-messaging-hosts"
+        JSON_FILE="youtube.volume.normalizer.json"
         ;;
     *)
         echo >&2 '
@@ -102,7 +104,7 @@ PATH_PLACEHOLDER="</path/to/executable>"
 if [[ -d "$BROWSER_DEST" ]]; then
     mkdir -p "$JSON_DEST"
     # Replace the placeholder path in the JSON file and install it
-    sed -e "s|$PATH_PLACEHOLDER|$CURRENT_DIR/youtube-volume-normalizer.py|g" "$JSON_FILE" >"$JSON_DEST/$JSON_FILE"
+    sed -e "s|$PATH_PLACEHOLDER|$CURRENT_DIR/youtube-volume-normalizer.py|g" "$JSON_FILE" >"$JSON_DEST/youtube.volume.normalizer.json"
 else
     echo "Please start your browser at least once to generate the required directories"
     exit 1

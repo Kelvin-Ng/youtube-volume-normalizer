@@ -23,7 +23,7 @@
 
   "permissions": ["storage", "nativeMessaging"],
 
-  "browser_specific_settings": {
+  "__firefox|safari__browser_specific_settings": {
     "gecko": {
       "id": "{0fa8f380-98c6-4cc9-9f24-10d84bf1b609}"
     }

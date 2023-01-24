@@ -10,10 +10,16 @@
   },
   "scripts": {
     "dev": "webextension-toolbox dev -s src",
-    "build": "webextension-toolbox build -s src",
-    "install": "./install.sh"
+    "build": "webextension-toolbox build -s src"
   },
+  "browserslist": [
+    "defaults"
+  ],
   "devDependencies": {
-    "@webextension-toolbox/webextension-toolbox": "^5.2.2"
+    "@webextension-toolbox/webextension-toolbox": "latest",
+    "webextension-polyfill": "latest",
+    "string-replace-loader": "latest",
+    "@types/firefox": "latest",
+    "@types/firefox-webext-browser": "latest"
   }
 }
