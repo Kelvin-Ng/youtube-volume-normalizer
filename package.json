@@ -20,6 +20,7 @@
     "webextension-polyfill": "latest",
     "string-replace-loader": "latest",
     "@types/firefox": "latest",
-    "@types/firefox-webext-browser": "latest"
+    "@types/firefox-webext-browser": "latest",
+    "web-audio-peak-meter": "git+https://github.com/Kelvin-Ng/web-audio-peak-meter.git#callback"
   }
 }

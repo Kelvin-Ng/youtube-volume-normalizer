@@ -28,6 +28,7 @@ class InfoPanel {
         this.closeButton.dispatchEvent(this.clickEvt);
         this.panelContent = await waitForElement('.html5-video-info-panel-content');
         this.contentLoudnessEle = await waitForXpath('div[4]/span', this.panelContent);
+        this.videoIdEle = await waitForElement('.ytp-sfn-cpn');
 
         this.observer.observe(this.contentLoudnessEle, {
             characterData: true,
@@ -50,6 +51,10 @@ class InfoPanel {
 
         var dB = parseFloat(contentLoudnessStr[6].slice(0, -3));
         return dB;
+    }
+
+    getVideoId() {
+        return this.videoIdEle.innerText.split(' / ')[0].trim();
     }
 
     setUseDefault() {

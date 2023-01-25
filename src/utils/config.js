@@ -10,5 +10,9 @@ export default class Config {
     static set(key, val) {
         return storageSyncSet('__config_' + key, val);
     }
+
+    static isConfig(key) {
+        return key.slice(0, 9) == '__config_';
+    }
 }
 

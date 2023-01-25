@@ -4,6 +4,26 @@
         <label for="useSysVolYes">Adjust system volume</label>
         <input type="radio" name="useSysVol" id="useSysVolNo"/>
         <label for="useSysVolNo">Amplify audio</label>
+
+        <br/>
+
+        <a>Adjust according to peak volume: </a>
+        <input type="radio" name="usePeak" id="usePeakYes"/>
+        <label for="usePeakYes">Yes</label>
+        <input type="radio" name="usePeak" id="usePeakNo"/>
+        <label for="usePeakNo">No</label>
+
+        <br/>
+
+        <hr class="solid"/>
+
+        <button id="showDebug">Show debug options</button>
+        <div id="debug" style="display: none">
+            <br/>
+            <a>Sync Storage</a>
+            <button id="debugClear">Clear</button>
+            <button id="debugPrint">Print</button>
+        </div>
     </body>
     <script src="../popup.js"></script>
 </html>

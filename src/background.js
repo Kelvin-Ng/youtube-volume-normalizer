@@ -1,6 +1,7 @@
 'use strict';
 
-import { storageLocalGet, storageLocalSet } from './utils/storage.js';
+import { storageLocalGet, storageLocalSet, storageSyncGet, storageSyncSet } from './utils/storage.js';
+import Config from './utils/config.js'
 
 function adjustSysVol(prevVol, newVol) {
     console.log('Youtube Volume Normalizer: Adjust system volume offset from ' + prevVol + 'dB to ' + newVol + 'dB');
@@ -78,6 +79,42 @@ async function activateTabVol(tabId) {
     }
 }
 
+async function getPeak(videoId) {
+    const res = await storageSyncGet(videoId, [0, 0]);
+    return res[0];
+}
+
+async function storePeak(videoId, peakRatio) {
+    console.log('YouTube Volume Normalizer: Storing peak for ' + videoId + ' as ' + peakRatio);
+
+    const timestamp = Date.now();
+    while (true) {
+        try {
+            await storageSyncSet(videoId, [peakRatio, timestamp]);
+            break;
+        } catch (err) {
+            const allPeaks = await browser.storage.sync.get(null);
+
+            let smallestTimestamp = Infinity;
+            let keyWithSmallestTimestamp = null;
+            for (let key in allPeaks) {
+                if (Config.isConfig(key)) {
+                    continue;
+                }
+
+                if (allPeaks[key][1] < smallestTimestamp) {
+                    smallestTimestamp = allPeaks[key][1];
+                    keyWithSmallestTimestamp = key;
+                }
+            }
+            if (keyWithSmallestTimestamp == null) {
+                throw err;
+            }
+            await browser.storage.sync.remove(keyWithSmallestTimestamp);
+        }
+    }
+}
+
 function handleTabUpdated(tabId, changeInfo, tabInfo) {
     navigator.locks.request('events', async (lock) => {
         if (changeInfo.url) {
@@ -99,13 +136,17 @@ function handleTabRemoved(tabId, removeInfo) {
 }
 
 function handleMessage(message, sender, sendResponse) {
-    navigator.locks.request('events', async (lock) => {
+    return navigator.locks.request('events', async (lock) => {
         const tabId = sender.tab.id;
 
-        if (message.type == 'set') {
+        if (message.type == 'applyGain') {
             await setTabVol(tabId, message.dB, !sender.tab.audible);
-        } else if (message.type == 'unset') {
+        } else if (message.type == 'revertGain') {
             await unsetTabVol(tabId, false);
+        } else if (message.type == 'getPeak') {
+            return getPeak(message.videoId);
+        } else if (message.type == 'storePeak') {
+            await storePeak(message.videoId, message.peakRatio);
         }
     });
 }
