@@ -16,6 +16,8 @@ class Context {
 
     async refresh() {
         this.infoPanel.refresh();
+        this.audioPeakGraph.disconnect();
+
         this.videoId = this.infoPanel.getVideoId();
         this.avgDb = this.infoPanel.getDb();
         this.peakRatio = 0;
@@ -29,6 +31,7 @@ class Context {
     }
 
     updatePeak(peakRatio) {
+        //console.log('YouTube Volume Normalizer: updatePeak: ' + peakRatio); // too much output
         if (peakRatio > this.peakRatio) {
             //console.log('YouTube Volume Normalizer: New Peak detected: ' + this.peakRatio + ' -> ' + peakRatio); // too much output
 
@@ -55,15 +58,18 @@ class Context {
     }
 
     applyGain() {
+        console.log('YouTube Volume Normalizer: Applying gain: ' + this.gainDb + 'dB');
         browser.runtime.sendMessage({type: 'applyGain', dB: this.gainDb});
     }
 
     revertGain() {
+        console.log('YouTube Volume Normalizer: Reverting gain');
         browser.runtime.sendMessage({type: 'revertGain'});
     }
 
     storePeak() {
         if (this.peakRatio > 0) {
+            console.log('YouTube Volume Normalizer: Store peak as ' + this.peakRatio);
             browser.runtime.sendMessage({type: 'storePeak', videoId: this.videoId, peakRatio: this.peakRatio});
         }
     }
@@ -84,6 +90,17 @@ class AudioPeakGraph {
 
         this.meterNode = WebAudioPeakMeter.createMeterNode(this.source, this.audioCtx);
         WebAudioPeakMeter.createMeter(null, this.meterNode, {}, callback);
+    }
+
+    disconnect() {
+        if (this.source != null) {
+            this.source.disconnect();
+            this.source = null;
+        }
+        if (this.meterNode != null) {
+            this.meterNode.onaudioprocess = null;
+            this.meterNode = null;
+        }
     }
 }
 

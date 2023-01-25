@@ -21,7 +21,7 @@
       "default_popup": "popup/popup.html"
   },
 
-  "permissions": ["storage", "nativeMessaging"],
+  "permissions": ["storage", "nativeMessaging", "tabs"],
 
   "__firefox|safari__browser_specific_settings": {
     "gecko": {
