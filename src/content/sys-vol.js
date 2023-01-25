@@ -101,6 +101,7 @@ class AudioPeakGraph {
             this.meterNode.onaudioprocess = null;
             this.meterNode = null;
         }
+        this.audioCtx.suspend();
     }
 }
 
@@ -146,13 +147,21 @@ async function videoSrcUpdated(context) {
 }
 
 function videoPlayed(evt, context) {
+    if (context.audioPeakGraph != null && context.avgDb < 0) {
+        context.audioPeakGraph.audioCtx.resume();
+    }
+
     if (!context.videoEle.muted) {
         context.applyGain();
     }
 }
 
-function videoPaused(evt) {
-    browser.runtime.sendMessage({type: 'revertGain'});
+function videoPaused(evt, context) {
+    if (context.audioPeakGraph != null) {
+        context.audioPeakGraph.audioCtx.suspend();
+    }
+
+    context.revertGain();
 }
 
 function videoVolumeChange(evt, context) {
@@ -191,13 +200,14 @@ async function sysVol(videoEle, infoPanel) {
     });
 
     videoEle.addEventListener('play', (evt) => {
-        if (context.audioPeakGraph != null) {
-            context.audioPeakGraph.audioCtx.resume();
-        }
         videoPlayed(evt, context);
     });
-    videoEle.addEventListener('pause', videoPaused);
-    videoEle.addEventListener('ended', videoPaused);
+    videoEle.addEventListener('pause', (evt) => {
+        videoPaused(evt, context);
+    });
+    videoEle.addEventListener('ended', (evt) => {
+        videoPaused(evt, context);
+    });
     videoEle.addEventListener('volumechange', (evt) => {
         videoVolumeChange(evt, context);
     });
