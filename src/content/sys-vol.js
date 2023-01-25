@@ -58,7 +58,7 @@ class Context {
     }
 
     applyGain() {
-        console.log('YouTube Volume Normalizer: Applying gain: ' + this.gainDb + 'dB');
+        //console.log('YouTube Volume Normalizer: Applying gain: ' + this.gainDb + 'dB'); // too much output
         browser.runtime.sendMessage({type: 'applyGain', dB: this.gainDb});
     }
 
