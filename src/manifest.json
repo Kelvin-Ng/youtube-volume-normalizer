@@ -23,6 +23,8 @@
 
   "permissions": ["storage", "nativeMessaging", "tabs"],
 
+  "__chrome__key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0W9fReZDEfU5rL0mi4ZwPVv9StR5XZtf2b1THHN2MTSHxpYXIoBFKNMmMBhtZmabn1pXNH0iT9cCJqLJvl8NqgoEVp4Nqyx7JsbtY0gyeBibWsgthPYz4KugfE4ZJOkzRVcGOWZDpuL0yl8GuwtLtAr7508g4LiKDuG8tizmCLUztuEnWXzbDqTfLYJDvO77O44UQcyx/smZcEbT2MJ4fdg94Lm075s2KCLImmxiV+9FewoknqMz9LoxucENfDwTIR5f9XIkVX1deeE909raXgq/N5yQhf2zK3XADi65a+KcRL5h8FmAFTk+KZQlsxiI+7LyO8kd5F+X1xKkUhha+wIDAQAB",
+
   "__firefox|safari__browser_specific_settings": {
     "gecko": {
       "id": "{0fa8f380-98c6-4cc9-9f24-10d84bf1b609}"
