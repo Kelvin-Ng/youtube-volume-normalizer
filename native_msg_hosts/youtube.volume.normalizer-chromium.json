@@ -3,6 +3,6 @@
   "description": "Native app for YouTube Volume Normalizer to control system volume",
   "path": "</path/to/executable>",
   "type": "stdio",
-  "allowed_origins": ["chrome-extension://cagfpoammioeoifknpppnkfehhdmmpge/"]
+  "allowed_origins": ["chrome-extension://ngehiebgibmdhaneeppejbnoaokpnghc/"]
 }
 
