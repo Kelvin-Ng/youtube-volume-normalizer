@@ -104,7 +104,7 @@ PATH_PLACEHOLDER="</path/to/executable>"
 if [[ -d "$BROWSER_DEST" ]]; then
     mkdir -p "$JSON_DEST"
     # Replace the placeholder path in the JSON file and install it
-    sed -e "s|$PATH_PLACEHOLDER|$CURRENT_DIR/youtube-volume-normalizer.py|g" "$JSON_FILE" >"$JSON_DEST/youtube.volume.normalizer.json"
+    sed -e "s|$PATH_PLACEHOLDER|$CURRENT_DIR/youtube-volume-normalizer.py|g" "native_msg_hosts/linux/$JSON_FILE" >"$JSON_DEST/youtube.volume.normalizer.json"
 else
     echo "Please start your browser at least once to generate the required directories"
     exit 1
