@@ -1,0 +1,5 @@
+;!@Install@!UTF-8!
+Title="YouTube Volume Normalizer v4.0.2"
+BeginPrompt="Do you want to install YouTube Volume Normalizer v4.0.2?"
+RunProgram="setup.bat"
+;!@InstallEnd@!
