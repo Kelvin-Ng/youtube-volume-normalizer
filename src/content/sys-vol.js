@@ -16,7 +16,9 @@ class Context {
 
     async refresh() {
         this.infoPanel.refresh();
-        this.audioPeakGraph.disconnect();
+        if (this.audioPeakGraph) {
+            this.audioPeakGraph.disconnect();
+        }
 
         this.videoId = this.infoPanel.getVideoId();
         this.avgDb = this.infoPanel.getDb();
